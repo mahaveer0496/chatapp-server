@@ -38,15 +38,18 @@ start()
 
 server.route({
   method: 'GET',
-  path: '/',
+  path: '/chat',
   handler: function(request, h) {
     return 'boooyaa'
   }
 })
 
-io.on('connection', () => {
-  console.log(`user booyaa`)
-})
-io.on('boo', () => {
-  console.log(`yaaa`)
+io.on('connection', socket => {
+  socket.on('chat', data => {
+    console.log(data)
+    io.emit('chatReturn', data)
+  })
+  socket.on('disconnect', () => {
+    console.log(socket.id, 'disconnected')
+  })
 })
