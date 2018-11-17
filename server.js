@@ -2,6 +2,9 @@
 
 const Inert = require('inert')
 const Hapi = require('hapi')
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost:27019/chatapp')
+const User = require('./models/UserModel')
 
 const server = Hapi.server({
   host: 'localhost',
@@ -37,8 +40,18 @@ async function start() {
 start()
 
 server.route({
+  method: 'POST',
+  path: '/api/login',
+  handler: function(request, h) {
+    const { payload } = request
+    console.log(payload)
+    return 'boooyaa'
+  }
+})
+
+server.route({
   method: 'GET',
-  path: '/chat',
+  path: '/api/chat',
   handler: function(request, h) {
     return 'boooyaa'
   }
