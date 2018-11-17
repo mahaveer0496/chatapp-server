@@ -3,9 +3,9 @@
 const Inert = require('inert')
 const Hapi = require('hapi')
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27019/chatapp')
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost:27017/chatapp')
 const User = require('./models/UserModel')
-
 const server = Hapi.server({
   host: 'localhost',
   port: 4000,
