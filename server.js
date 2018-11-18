@@ -4,7 +4,10 @@ const Inert = require('inert')
 const Hapi = require('hapi')
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost:27017/chatapp')
+mongoose.connect(
+  'mongodb://localhost:27017/chatapp',
+  { useNewUrlParser: true }
+)
 const User = require('./models/UserModel')
 const server = Hapi.server({
   host: 'localhost',
@@ -33,7 +36,7 @@ async function start() {
     // console.log(err)
     process.exit(1)
   }
-
+  process.stdout.write('\x1B[2J')
   console.log('Server running at:', server.info.uri)
 }
 
@@ -42,10 +45,14 @@ start()
 server.route({
   method: 'POST',
   path: '/api/login',
-  handler: function(request, h) {
+  handler: async function(request, h) {
     const { payload } = request
-    console.log(payload)
-    return 'boooyaa'
+    let user = await User.findOne({ name: payload })
+    if (!user) {
+      user = await User.create({ name: payload })
+      return { payload: user.name }
+    }
+    return { error: 'User name taken' }
   }
 })
 
