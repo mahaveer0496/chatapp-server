@@ -1,14 +1,18 @@
 'use strict'
-
+// Packages-----
 const Inert = require('inert')
 const Hapi = require('hapi')
 const mongoose = require('mongoose')
+
+// Models------
+const User = require('./models/UserModel')
+const Message = require('./models/MessageModel')
+
 mongoose.Promise = global.Promise
 mongoose.connect(
   'mongodb://localhost:27017/chatapp',
   { useNewUrlParser: true }
 )
-const User = require('./models/UserModel')
 const server = Hapi.server({
   host: 'localhost',
   port: 4000,
@@ -65,10 +69,13 @@ server.route({
 })
 
 io.on('connection', socket => {
+  
+  
   socket.on('chat', data => {
     console.log(data)
     io.emit('chatReturn', data)
   })
+
   socket.on('disconnect', () => {
     console.log(socket.id, 'disconnected')
   })
