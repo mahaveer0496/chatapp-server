@@ -22,19 +22,19 @@ const server = Hapi.server({
     }
   }
 })
-const io = require('socket.io')(server.listener)
+
 async function start() {
   try {
-    await server.register([
-      Inert,
-      {
-        plugin: require('hapi-pino'),
-        options: {
-          prettyPrint: true,
-          logEvents: ['response', 'onPostStart']
-        }
-      }
-    ])
+    // await server.register([
+    //   Inert
+    //   // {
+    //   //   plugin: require('hapi-pino'),
+    //   //   options: {
+    //   //     prettyPrint: true,
+    //   //     logEvents: ['response', 'onPostStart']
+    //   //   }
+    //   // }
+    // ])
     await server.start()
   } catch (err) {
     // console.log(err)
@@ -68,15 +68,5 @@ server.route({
   }
 })
 
-io.on('connection', socket => {
-  
-  
-  socket.on('chat', data => {
-    console.log(data)
-    io.emit('chatReturn', data)
-  })
+module.exports = require('socket.io')(server.listener)
 
-  socket.on('disconnect', () => {
-    console.log(socket.id, 'disconnected')
-  })
-})
