@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 const User = require('./models/UserModel')
 const Message = require('./models/MessageModel')
 
+// Utils-------
+const socketIO = require('./socketIo')
 mongoose.Promise = global.Promise
 mongoose.connect(
   'mongodb://localhost:27017/chatapp',
@@ -23,6 +25,7 @@ const server = Hapi.server({
   }
 })
 
+const IO = require('socket.io')(server.listener)
 async function start() {
   try {
     // await server.register([
@@ -40,7 +43,7 @@ async function start() {
     // console.log(err)
     process.exit(1)
   }
-  process.stdout.write('\x1B[2J')
+  // process.stdout.write('\x1B[2J')
   console.log('Server running at:', server.info.uri)
 }
 
@@ -68,5 +71,4 @@ server.route({
   }
 })
 
-module.exports = require('socket.io')(server.listener)
-
+socketIO(IO)
